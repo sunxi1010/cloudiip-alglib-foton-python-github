@@ -24,7 +24,7 @@ const traefik = new k8s.helm.v3.Chart('traefik', {
     fetchOpts: { repo: 'https://traefik.github.io/charts'},
     values: {
         "service": {
-            "type": "ClusterIp"
+            "type": "NodePort"
         }
     }
 })

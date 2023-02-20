@@ -22,12 +22,12 @@ export default class TraefikRoute extends pulumi.ComponentResource {
       metadata: { namespace: args.namespace },
       spec: {
         redirectRegex: {
-          regex: `^.*\\${args.prefix}$`,
+          regex: "^.*//${args.prefix}$",
           replacement: `${args.prefix}/`,
           permanent: false,
         },
       },
-    }, { provider: opts?.provider });
+    });
     
     middlewares.push({ name: trailingSlashMiddleware.metadata.name });
 
@@ -42,7 +42,7 @@ export default class TraefikRoute extends pulumi.ComponentResource {
             prefixes: [args.prefix],
           },
         },
-      }, { provider: opts?.provider });
+      });
 
       middlewares.push({ name: stripPrefixMiddleware.metadata.name });
     }
@@ -54,17 +54,16 @@ export default class TraefikRoute extends pulumi.ComponentResource {
       spec: {
         entryPoints: ['web'],
         routes: [{
-          match: `PathPrefix(\`${args.prefix}\`)`,
+          match: "Host(`traefik.localhost`) && PathPrefix(`/mlflow`)",
           kind: 'Rule',
-          middlewares,
           services: [{
-            name: typeof args.service === "string" ? args.service : pulumi.output(args.service).metadata.name,
-            port: args.port ? args.port : 
-              (typeof args.service !== "string" ? pulumi.output(args.service).spec.ports[0].port : 80),
+            kind: "Service",
+            name: "mlflow",
+            port: 5000,
           }],
         }]
       },
-    }, { provider: opts?.provider });
+    });
   }
 }
 
