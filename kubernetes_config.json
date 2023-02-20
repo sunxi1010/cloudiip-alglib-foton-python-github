@@ -1,0 +1,5 @@
+{
+    "kube-context": "minikube",
+    "kube-job-template-path": "mlflow-on-k8s/kubernetes_job_template.yaml",
+    "repository-uri": "192.168.0.66:5001/sunxi1010/mlflow-docker-example"
+  }

@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mlflow-on-k8s
+  namespace: default
+spec:
+  template:
+    metadata:
+      name: mlflow-on-k8s
+    spec:
+      containers:
+        - name: mlflow-on-k8s
+          image: 192.168.0.66:5001/sunxi1010/mlflow-docker-example
+          command: ["python"]
+          args: ["train.py", "{alpha}", "{ll_ratio}"]
+      restartPolicy: Never

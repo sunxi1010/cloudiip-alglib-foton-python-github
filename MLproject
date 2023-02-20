@@ -1,0 +1,12 @@
+name: mlflow-on-k8s
+
+docker_env:
+  image: 192.168.0.66:5001/sunxi1010/mlflow-docker-example
+  # volumes: ["/app/python/mlflow-on-k8s:/app/python/mlflow-on-k8s"]
+
+entry_points:
+  main:
+    parameters:
+      alpha: {type: float, default: 0.5}
+      l1_ratio: {type: float, default: 0.1}
+    command: "python train.py {alpha} {l1_ratio}"

@@ -1,0 +1,14 @@
+{
+    "name": "mlplatform-infra",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^16"
+    },
+    "dependencies": {
+        "@pulumi/kubernetes": "^3.0.0",
+        "@pulumi/kubernetesx": "^0.1.5",
+        "@pulumi/minio": "^0.6.0",
+        "@pulumi/postgresql": "^3.6.0",
+        "@pulumi/pulumi": "^3.0.0"
+    }
+}

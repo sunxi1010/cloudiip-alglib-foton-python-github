@@ -1,0 +1,10 @@
+config:
+  kubernetes:context: minikube
+  minio:minioAccessKey:
+    secure: AAABAJxPiR7MvWQRekdWb1TxyiTBX9RFcshq9UpALXQLwrprDFVqWvDSh4bUPFHj
+  minio:minioSecretKey:
+    secure: AAABAEie4VOUhIIzMm8NGzE4T91C9aPQ+PZ7iCjCx0dwMDfQyoKvtjNnyUrxV2Mk86xWBYHYgA9PIjFS8jj3/A==
+  minio:minioServer: http://192.168.0.66:9000
+  mlplatform-infra:isMinikube: "true"
+  postgresql:host: 192.168.49.2
+  postgresql:username: postgres
