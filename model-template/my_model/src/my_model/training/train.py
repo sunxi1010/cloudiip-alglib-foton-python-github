@@ -3,8 +3,12 @@ from sklearn.metrics import accuracy_score, log_loss
 import pandas as pd
 import lightgbm as lgb
 
+import mlflow
+import mlflow.lightgbm
 
-
+# enable mlflow logging
+mlflow.set_tracking_uri('http://localhost:5002')
+mlflow.lightgbm.autolog()
 
 # Prepare training data
 df = pd.read_csv('data/iris.csv')
@@ -19,26 +23,34 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 train_data = lgb.Dataset(X_train, label=y_train)
 
 def main():
-  # Train model
-  params = {
-    "objective": "multiclass",
-    "num_class": 3, 
-    "learning_rate": 0.2,
-    "metric": "multi_logloss",
-    "feature_fraction": 0.8,
-    "bagging_fraction": 0.9,
-    "seed": 42,
-  }
+    with mlflow.start_run() as run:
+      # Train model
+        params = {
+          "objective": "multiclass",
+          "num_class": 3, 
+          "learning_rate": 0.2,
+          "metric": "multi_logloss",
+          "feature_fraction": 0.8,
+          "bagging_fraction": 0.9,
+          "seed": 42,
+        }
 
-  model = lgb.train(params, train_data, valid_sets=[train_data])
+        model = lgb.train(params, train_data, valid_sets=[train_data])
 
-  # Evaluate model
-  y_proba = model.predict(X_test)
-  y_pred = y_proba.argmax(axis=1)
+        # Evaluate model
+        y_proba = model.predict(X_test)
+        y_pred = y_proba.argmax(axis=1)
 
-  loss = log_loss(y_test, y_proba)
-  acc = accuracy_score(y_test, y_pred)
- 
+        loss = log_loss(y_test, y_proba)
+        acc = accuracy_score(y_test, y_pred)
+
+        mlflow.log_metrics({
+          "log_loss": loss,
+          "accuracy": acc
+        })
+
+    print("Run ID:", run.info.run_id)
+  
 
 if __name__ == "__main__":
     main()
