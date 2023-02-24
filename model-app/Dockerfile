@@ -18,6 +18,7 @@ RUN pip install --upgrade pip
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV MODULE_NAME=app 
+ENV WEB_CONCURRENCY=12
 
 ADD requirements.txt . 
 

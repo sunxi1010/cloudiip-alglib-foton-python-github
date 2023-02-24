@@ -71,4 +71,7 @@ node_modules/
 docker-registry/
 
 # data
-/data/
+data/
+
+# test
+tests/

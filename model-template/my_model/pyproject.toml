@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "my-model"
+version = "0.1.0"
+description = ""
+authors = ["sunxi <sunxi1010@126.com>"]
+readme = "README.md"
+packages = [{include = "my_model", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "3.9.7"
+scikit-learn = "1.2.1"
+pandas = "1.5.3"
+lightgbm = "3.3.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+train = "src.my_model.training.train:main"
+
+[[tool.poetry.source]]
+name = "localhost"
+default = true
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"

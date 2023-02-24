@@ -95,3 +95,18 @@ exec sudo nsenter -t $(pidof systemd) -a su - $LOGNAME
 10. 在wsl中添加网卡
 sudo ifconfig eth0:1 192.168.49.2 up
 sudo ifconfig eth0:1 down
+
+11. 使用kind构建集群
+kind create cluster --image kindest/node:v1.25.2 --config /root/traefik-demo/kind-cluster-config.yaml
+
+kubectl version: v1.25.2
+
+启动dashboard
+kubectl apply -f /root/recommended.yaml
+kubectl apply -f /root/traefik-demo/create-service-account.yaml
+kubectl apply -f /root/traefik-demo/create-ClusterRoleBinding.yaml
+kubectl proxy
+dashboard地址
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+获取登录token
+kubectl -n kubernetes-dashboard create token admin-user

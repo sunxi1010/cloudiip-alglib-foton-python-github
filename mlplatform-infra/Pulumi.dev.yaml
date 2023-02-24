@@ -1,5 +1,5 @@
 config:
-  kubernetes:context: minikube
+  kubernetes:context: kind-kind
   minio:minioAccessKey:
     secure: AAABAJxPiR7MvWQRekdWb1TxyiTBX9RFcshq9UpALXQLwrprDFVqWvDSh4bUPFHj
   minio:minioSecretKey:

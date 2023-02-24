@@ -14,6 +14,10 @@ from crud.crud_param import get_all_params
 from db.database import get_db, SessionLocal
 from db.iotdb import get_iotdb
 
+from logging.config import dictConfig
+import logging
+from config.logconfig import LogConfig
+
 app = FastAPI(title="ML API", description="API for cloudiip-bit-plugins ml model", version="1.0")
 
 # iotdb实时数据接口
@@ -25,6 +29,9 @@ $paramcode from " + DEVICE_NAME + \
 " where time >= $starttime" + \
 " and time < $currenttime")
 DAY_TIMESTAMP = 86400000
+
+dictConfig(LogConfig().dict())
+logger = logging.getLogger("mycoolapp")
 
 # 创建请求体
 class ModelInput(BaseModel):
@@ -105,6 +112,7 @@ async def get_prediction(modelInput: ModelInput):
     输出结果：预测值，当前值和预测值的差值，相似度
     '''
     # 获取接口数据
+    logger.info(f"model input: {modelInput}")
     real = modelInput.real
     timestamp = modelInput.time
     paramcode = modelInput.paramcode
@@ -112,10 +120,11 @@ async def get_prediction(modelInput: ModelInput):
     # 获取历史数据
     sql = sql_template.substitute(paramcode=paramcode, starttime=timestamp - DAY_TIMESTAMP, currenttime=timestamp)
     df = get_iotdb_df(sql)
-
+    
     print(sql)
     data = df[df[DEVICE_NAME + '.' + paramcode] > 0][DEVICE_NAME + '.' + paramcode]
     ind = data.index
+    print(data[0])
     # df = health_indicator(data,use_filter=True)
     x = np.array(ind)
     y = np.array(data)
@@ -127,12 +136,12 @@ async def get_prediction(modelInput: ModelInput):
         damped_trend=True,
         initialization_method="estimated",
     ).fit(smoothing_level=0.8, smoothing_trend=0.4)
-
+    
     # 使用模型预测
     predict = fit_model.forecast(1)[0]
     # 计算结果
-    error = real - predict
-    similarity = 1 - abs(error/real)
+    error = abs(real - predict)
+    similarity = 1 - error/real
     # 更新df数据集
     # index = df[df.time == timestamp].index.tolist()[0]
     # df.loc[index, ['predict', 'error', 'similarity']] = [predict, error, similarity]
@@ -173,8 +182,8 @@ async def get_corr(session: Session = Depends(get_db)):
     df.columns = df_columns
 
     # 计算相关性分析
-    corr_df = df.corr(numeric_only=True)
-
+    corr_df = df.drop(labels='Time', axis=1).corr(numeric_only=True)
+    
     # 输出相关系数矩阵
     data_copy = corr_df.values
     corrs_matrix = []
@@ -195,7 +204,6 @@ async def get_corr(session: Session = Depends(get_db)):
         negative_corr_dict = negative_corr.to_dict().get(row)
         negative_correlation.append(negative_corr_dict)
 
-    print(type(positive_correlation))
     keys = [str(x) for x in np.arange(1, len(positive_correlation) + 1)]
 
     return {
