@@ -11,5 +11,9 @@ jobs:
         uses: actions/checkout@master
         
       - name: cd model-template/my-model
-        run: cd ./model-template/my_model/ && pwd && make install-deps && make train
+        run: |
+          cd ./model-template/my_model/
+          pwd
+          make install-deps
+          make train
 
