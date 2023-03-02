@@ -12,5 +12,5 @@ install-deps:
 	poetry install
 
 train:
-    poetry run train
+	poetry run train
 
