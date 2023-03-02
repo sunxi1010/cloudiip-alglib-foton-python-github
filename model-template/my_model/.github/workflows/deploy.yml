@@ -1,0 +1,19 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main 
+  workflow-dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Install dependencies
+        run: make install-deps
+
+      - name: Deploy
+        run: make deploy

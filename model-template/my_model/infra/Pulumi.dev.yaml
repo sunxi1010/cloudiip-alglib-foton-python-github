@@ -1,0 +1,4 @@
+config:
+  docker:host: tcp://localhost:5000/
+  infra:baseStackName: sunxi/mlplatform-infra/dev
+  infra:runID: 6cbcdaaba14749b881328777489c18f6

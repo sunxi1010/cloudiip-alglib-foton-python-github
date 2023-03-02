@@ -7,7 +7,8 @@ import mlflow
 import mlflow.lightgbm
 
 # enable mlflow logging
-mlflow.set_tracking_uri('http://localhost:5002')
+# mlflow.set_tracking_uri('http://localhost:5002')
+mlflow.set_tracking_uri('http://traefik.localhost/mlflow')
 mlflow.lightgbm.autolog()
 
 # Prepare training data

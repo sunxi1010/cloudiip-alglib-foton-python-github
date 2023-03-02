@@ -1,9 +1,11 @@
 from iotdb.Session import Session
 
-IOTDB_IP = "172.16.32.226"
-IOTDB_PORT = "6667"
-IOTDB_USERNAME = "root"
-IOTDB_PASSWORD = "root"
+from config import envconfig
+
+IOTDB_IP = envconfig.Settings().iotdb_ip
+IOTDB_PORT = envconfig.Settings().iotdb_port
+IOTDB_USERNAME = envconfig.Settings().iotdb_username
+IOTDB_PASSWORD = envconfig.Settings().iotdb_password
 
 
 

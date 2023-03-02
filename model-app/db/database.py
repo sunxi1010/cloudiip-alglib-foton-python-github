@@ -3,7 +3,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "mysql+mysqldb://root:cloudiip123@172.16.32.194:3306/cloudiip_dev"
+from config import envconfig
+
+DATABASE_IP = envconfig.Settings().database_ip
+DATABASE_PORT = envconfig.Settings().database_port
+DATABASE_USERNAME = envconfig.Settings().database_username
+DATABASE_PASSWORD = envconfig.Settings().database_password
+DATABASE_NAME = envconfig.Settings().database_name
+DATABASE_URL = f"mysql+mysqldb://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@{DATABASE_IP}:{DATABASE_PORT}/{DATABASE_NAME}"
+
 
 db_engine = create_engine(DATABASE_URL, connect_args={'connect_timeout': 120})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=db_engine)

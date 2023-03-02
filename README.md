@@ -26,9 +26,9 @@ minikube start --driver=docker --force --image-mirror-country=cn --image-reposit
 
 2. 搭建私有docker registry
 构建私有docker仓库，用于集群访问
-docker run -d -p 0.0.0.0:5001:5001 \
+docker run -d -p 0.0.0.0:5000:5000 \
 --restart=always \
---name registry registry:latest
+--name kind-registry registry:2
 
 docker run \
   	-d \

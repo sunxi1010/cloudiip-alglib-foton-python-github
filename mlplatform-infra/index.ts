@@ -17,17 +17,22 @@ const mlflowNamespace = new k8s.core.v1.Namespace('mlflow-namespace', {
     metadata: { name: 'mlflow' },
 });
 
-// install traefik
-const traefik = new k8s.helm.v3.Chart('traefik', {
-    chart: 'traefik',
-    namespace: mlflowNamespace.metadata.name,
-    fetchOpts: { repo: 'https://traefik.github.io/charts'},
-    values: {
-        "service": {
-            "type": "NodePort"
-        }
-    }
+// install ingress-nginx
+const ingressNginx = new k8s.yaml.ConfigFile("ingrss-nginx", {
+    file: "data/ingress-nginx-deploy.yaml"
 })
+
+// install traefik
+// const traefik = new k8s.helm.v3.Chart('traefik', {
+//     chart: 'traefik',
+//     namespace: mlflowNamespace.metadata.name,
+//     fetchOpts: { repo: 'https://traefik.github.io/charts'},
+//     values: {
+//         "service": {
+//             "type": "NodePort"
+//         }
+//     }
+// })
 
 // Create Postgres database for MLFlow
 const db = new k8s.helm.v3.Chart("postgresql", {
@@ -35,6 +40,11 @@ const db = new k8s.helm.v3.Chart("postgresql", {
     namespace: mlflowNamespace.metadata.name,
     fetchOpts: { repo: "https://charts.bitnami.com/bitnami" },
     values: {
+        "primary": {
+            "service": {
+                "type": "NodePort",
+            }
+        },
         "auth": {
             "postgreslPassword": "root",
             "username": "sunxi",
@@ -47,9 +57,13 @@ const db = new k8s.helm.v3.Chart("postgresql", {
 // install minio
 const mlflowBucket = new k8s.helm.v3.Chart("mlflow-bucket", {
     chart: "minio",
+    version: "11.10.26",
     namespace: mlflowNamespace.metadata.name,
     fetchOpts: { repo: "https://charts.bitnami.com/bitnami" },
     values: {
+        "service": {
+            "type": "NodePort",
+        },
         "auth": {
             "rootUser": "root",
             "rootPassword": "123456sx"
@@ -63,6 +77,9 @@ const mlflow = new k8s.helm.v3.Chart("mlflow", {
     namespace: mlflowNamespace.metadata.name,
     fetchOpts: { repo: "https://community-charts.github.io/helm-charts"},
     values: {
+        "service": {
+            "type": "NodePort",
+        },
         "backendStore": {
             "databaseMigration": true,
             "postgres": {
@@ -92,12 +109,12 @@ const mlflow = new k8s.helm.v3.Chart("mlflow", {
 });
 
 // expose mlflow in traefik as mlflow
-new TraefikRoute('mlflow', {
-    prefix: 'mlflow',
-    service: mlflow.getResource('v1/Service', 'mlflow', 'mlflow'),
-    namespace: mlflowNamespace.metadata.name
-}, {dependsOn: [mlflow]})
+// new TraefikRoute('mlflow', {
+//     prefix: 'mlflow',
+//     service: mlflow.getResource('v1/Service', 'mlflow', 'mlflow'),
+//     namespace: mlflowNamespace.metadata.name
+// }, {dependsOn: [mlflow]})
 
-
+export const kubeconfig = config
 export const databaseName = db.getResourceProperty("v1/Service", "mlflow", "postgresql", "spec")
 export const mlflowBucketURI = mlflowBucket.getResourceProperty("v1/Service", "mlflow", "mlflow-bucket-minio", "spec")
