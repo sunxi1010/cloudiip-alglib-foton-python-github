@@ -13,7 +13,7 @@ jobs:
       - name: cd model-template/my-model
         uses: ./.model-template/my-model
 
-        run: pwd
+      - run: pwd
 
       - name: Install dependencies
         run: make install-deps
