@@ -111,4 +111,4 @@ http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kube
 获取登录token
 kubectl -n kubernetes-dashboard create token admin-user
 
-12. 使用github action
+12. 使用github action workflow
