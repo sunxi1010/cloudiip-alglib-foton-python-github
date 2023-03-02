@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@master
         
       - name: cd model-template/my-model
-        uses: ./.model-template/my-model
+        uses: ./model-template/my-model
 
       - run: pwd
 
