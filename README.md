@@ -110,3 +110,5 @@ dashboard地址
 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
 获取登录token
 kubectl -n kubernetes-dashboard create token admin-user
+
+12. 使用github action
