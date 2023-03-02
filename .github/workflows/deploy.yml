@@ -11,12 +11,5 @@ jobs:
         uses: actions/checkout@master
         
       - name: cd model-template/my-model
-        run: cd ./model-template/my_model/
+        run: cd ./model-template/my_model/ && pwd && make install-deps && make train
 
-      - run: pwd
-
-      - name: Install dependencies
-        run: make install-deps
-
-      - name: poetry run train
-        run: make train
