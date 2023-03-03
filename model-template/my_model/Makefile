@@ -11,5 +11,6 @@ install-deps:
 	poetry install
 
 train:
+	conda activate base
 	poetry run train
 
