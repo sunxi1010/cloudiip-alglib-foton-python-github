@@ -70,8 +70,6 @@ node_modules/
 # docker registry
 docker-registry/
 
-# data
-data/
 
 # test
 tests/
